@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark" th:fragment="nav">
+    <a class="navbar-brand" href="/" target="_blank">Calendar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    
+        <ul class="float-right navbar-nav" th:if="${principal == null}">
+            <li class="nav-item active">
+                <a th:href="@{/register}" class="nav-link">Register</a>
+            </li>
+            <li class="nav-item active">
+                <a th:href="@{/login}" class="nav-link">Login</a>
+            </li>
+        </ul>
+
+        <form  th:if="${principal != null}" method="POST" th:action="@{/logout}">
+            <span class="text-white" th:text="${'Hi, ' + principal}"></span>
+            <button class="btn btn-secondary">Logout</button>
+        </form>
+    </div>
+</nav>
