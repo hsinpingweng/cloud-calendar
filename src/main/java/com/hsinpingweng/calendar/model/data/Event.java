@@ -12,15 +12,55 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import lombok.Data;
+// import lombok.Data;
 
 @Entity
 @Table(name="events")
-@Data
+// @Data
 public class Event {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getHostUserId() {
+        return this.hostUserId;
+    }
+
+    public void setHostUserId(String hostUserId) {
+        this.hostUserId = hostUserId;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public LocalDateTime getStart() {
+        return this.start;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public LocalDateTime getEnd() {
+        return this.end;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
 
     @Column(name="host_user_id")
     private String hostUserId;
