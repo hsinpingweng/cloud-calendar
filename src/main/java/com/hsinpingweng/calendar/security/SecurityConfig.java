@@ -34,10 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/calendar/**").hasAnyRole("USER")
-                
                     .and()
                         .formLogin()
                             .loginPage("/login")
+                            .successForwardUrl("/calendar")
                     .and()
                         .logout()
                             .logoutSuccessUrl("/login")
