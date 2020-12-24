@@ -84,13 +84,14 @@ public class CalendarHomeController {
         
         } else {
 
-            Event existedEvent = eventRepo.findById(event.getId());
-            if (existedEvent == null){
+            // retrieve events are booked by this user
+            List<Event> events = eventRepo.findByhostUserIdAndIsBookingTrue(event.getHostUserId());
+            
+            boolean isEventExisted = false;
 
-                // retrieve events are booked by this user
-                List<Event> events = eventRepo.findByhostUserIdAndIsBookingTrue(event.getHostUserId());
-                
-                for (Event e : events) { 
+            for (Event e : events) { 
+
+                if (e.getId() != event.getId()) {
                     if ((event.getStart().isBefore(e.getStart()) || event.getStart().isEqual(e.getStart()))   
                         && (event.getEnd().isAfter(e.getStart())) 
                     
@@ -102,10 +103,14 @@ public class CalendarHomeController {
                         
                         return "redirect:/calendar";
                     }
+                } else {
+                    isEventExisted = true;
                 }
             }
 
-            redirectAttributes.addFlashAttribute("message", "Event created");
+            String message = isEventExisted ? "Event edited" : "Event created";
+            
+            redirectAttributes.addFlashAttribute("message", message);
             redirectAttributes.addFlashAttribute("alertClass", "alert-success");
 
             eventRepo.save(event);
