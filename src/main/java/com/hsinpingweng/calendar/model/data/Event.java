@@ -62,6 +62,14 @@ public class Event {
         this.end = end;
     }
 
+    public Boolean getIsBooking() {
+        return this.isBooking;
+    }
+
+    public void setIsBooking(Boolean isBooking) {
+        this.isBooking = isBooking;
+    }
+
     @Column(name="host_user_id")
     private String hostUserId;
 
@@ -76,4 +84,6 @@ public class Event {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime end;
 
+    @Column(name="is_booking")
+    private Boolean isBooking;
 }

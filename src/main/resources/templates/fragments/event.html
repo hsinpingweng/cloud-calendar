@@ -23,10 +23,17 @@
           </div>
         
           <div class="form-group row">
-              <label for="end-input" class="col-sm-3 col-form-label">End</label>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="end-input" th:field="*{end}" placeholder="In YYYY-MM-DD HH:MM format">
-              </div>
+            <label for="end-input" class="col-sm-3 col-form-label">End</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="end-input" th:field="*{end}" placeholder="In YYYY-MM-DD HH:MM format">
+            </div>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="isbook-input" th:field="*{isBooking}">
+            <label class="form-check-label" for="isbook-input">
+              Book a slot?
+            </label>
           </div>
 
           <input type="hidden" id="host-id-input" th:field="*{hostUserId}">
@@ -69,6 +76,13 @@
             <div class="col-sm-9">
               <input type="text" class="form-control" id="end-input" th:field="*{end}" placeholder="In YYYY-MM-DD HH:MM format">
             </div>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="isbook-input" th:field="*{isBooking}">
+          <label class="form-check-label" for="isbook-input">
+            Book a slot?
+          </label>
         </div>
 
         <div class="row">

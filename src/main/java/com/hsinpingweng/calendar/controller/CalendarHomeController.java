@@ -12,6 +12,7 @@ import com.hsinpingweng.calendar.model.EventRepository;
 import com.hsinpingweng.calendar.model.SharedUserRepository;
 import com.hsinpingweng.calendar.model.UserRepository;
 
+import org.hibernate.validator.internal.engine.messageinterpolation.parser.EscapedState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -82,6 +83,28 @@ public class CalendarHomeController {
             redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
         
         } else {
+
+            Event existedEvent = eventRepo.findById(event.getId());
+            if (existedEvent == null){
+
+                // retrieve events are booked by this user
+                List<Event> events = eventRepo.findByhostUserIdAndIsBookingTrue(event.getHostUserId());
+                
+                for (Event e : events) { 
+                    if ((event.getStart().isBefore(e.getStart()) || event.getStart().isEqual(e.getStart()))   
+                        && (event.getEnd().isAfter(e.getStart())) 
+                    
+                        || (event.getStart().isAfter(e.getStart()) || event.getStart().isEqual(e.getStart()))
+                        && (event.getStart().isBefore(e.getEnd()))) {
+                        
+                        redirectAttributes.addFlashAttribute("message", "This time slot is not available. Please input a different time.");
+                        redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+                        
+                        return "redirect:/calendar";
+                    }
+                }
+            }
+
             redirectAttributes.addFlashAttribute("message", "Event created");
             redirectAttributes.addFlashAttribute("alertClass", "alert-success");
 

@@ -84,16 +84,18 @@
             + '-' + event.end.dayOfMonth
             + ' ' + event.end.hour
             + ':' + event.end.minute;
-    
+            item["isBooking"] = event.isBooking;
+
+            // set event color to orange if the event host is this user
+            // else set event color to blue
+            item["color"] = event.hostUserId == userId ? "orange" : "#4682B4";
+            
             jsonObj.push(item);
         });
 
         $(function() {
             $('#calendar').fullCalendar({
 
-                dayClick: function() {
-                    alert('a day has been clicked!');
-                }, 
                 eventClick: function(info) {
                     console.log(info);
                     $("#eventModal-edit #id-input").val(info.id);
@@ -101,6 +103,7 @@
                     $("#eventModal-edit #start-input").val(moment(info.start).format('yyyy-MM-DD HH:mm'));
                     $("#eventModal-edit #end-input").val(moment(info.end).format('yyyy-MM-DD HH:mm'));
                     $("#eventModal-edit #host-id-input").val(info.hostUserId);
+                    $("#eventModal-edit #isbook-input").prop('checked', info.isBooking);
                     $("#eventModal-edit #host-id").text(info.hostUserId);
                     
                     if (info.hostUserId == userId){
@@ -114,17 +117,16 @@
 
                     $("#eventModal-edit").modal("show");
                 },
+                
                 eventMouseEnter: function(event, el, jsEvent, view){
                     alert(el);
                 },
 
                 events: jsonObj,
-                eventColor: '#4682B4',
                 eventTextColor: '#FFFFFF',
                 editable: true
             });
         });
-
         
         $("#addUserBtn").click(function () {
             $("#shareUserModal").modal("show");
