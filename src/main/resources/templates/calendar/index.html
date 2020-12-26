@@ -67,23 +67,30 @@
 
         var eventsJson = JSON.parse($('#calendar').attr("events"));
 
+        function fillDigit(num) {
+            return ("00" + num).slice(-2);
+        }
+        
+        
         jsonObj = [];
         $.each(eventsJson, function(i, event) {
+            // console.log(event);
             item = {};
             item["id"] = event.id;
             item["hostUserId"] = event.hostUserId;
             item["title"] = event.title;
+
             item["start"] = event.start.year
-                            + '-' + event.start.monthValue
-                            + '-' + event.start.dayOfMonth
-                            + ' ' + event.start.hour
-                            + ':' + event.start.minute;
+                            + '-' + fillDigit(event.start.monthValue)
+                            + '-' + fillDigit(event.start.dayOfMonth)
+                            + ' ' + fillDigit(event.start.hour)
+                            + ':' + fillDigit(event.start.minute);
 
             item["end"] = event.end.year
-            + '-' + event.end.monthValue
-            + '-' + event.end.dayOfMonth
-            + ' ' + event.end.hour
-            + ':' + event.end.minute;
+            + '-' + fillDigit(event.end.monthValue)
+            + '-' + fillDigit(event.end.dayOfMonth)
+            + ' ' + fillDigit(event.end.hour)
+            + ':' + fillDigit(event.end.minute);
             item["isBooking"] = event.isBooking;
 
             // set event color to orange if the event host is this user
@@ -91,6 +98,7 @@
             item["color"] = event.hostUserId == userId ? "#4682B4" : "orange" ;
             
             jsonObj.push(item);
+            console.log(item["start"]);
         });
 
         $(function() {
