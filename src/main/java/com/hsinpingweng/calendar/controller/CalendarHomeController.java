@@ -74,14 +74,14 @@ public class CalendarHomeController {
     public String index(@Valid Event event, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getName().equals(event.getHostUserId())){
-            redirectAttributes.addFlashAttribute("message", "You can not edit the event since you not the host user.");
-            redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
-
-        } else if(bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("message", "Given data is not valid, please try again.");
             redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
         
+        } else if (!auth.getName().equals(event.getHostUserId())){
+            redirectAttributes.addFlashAttribute("message", "You can not edit the event since you not the host user.");
+            redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+
         } else {
 
             // retrieve events are booked by this user
@@ -120,12 +120,19 @@ public class CalendarHomeController {
     }
 
     @PostMapping("/shareduser")
-    public String shareduser(@Valid SharedUser sharedUser, BindingResult bindingResult) {
+    public String shareduser(@Valid SharedUser sharedUser, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         
-        if (userRepo.findByUsername(sharedUser.getShareToUserId()) != null){
-            sharedUserRepo.save(sharedUser);
-        }
+        boolean isSharedUserExisted = userRepo.findByUsername(sharedUser.getShareToUserId()) != null;
 
+        if (isSharedUserExisted){
+            sharedUserRepo.save(sharedUser);
+            redirectAttributes.addFlashAttribute("message", "Calendar is shared with the user.");
+            redirectAttributes.addFlashAttribute("alertClass", "alert-success");
+        } else {
+            redirectAttributes.addFlashAttribute("message", "User is Not existed.");
+            redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+        }
+        
         return "redirect:/calendar";
     }
     

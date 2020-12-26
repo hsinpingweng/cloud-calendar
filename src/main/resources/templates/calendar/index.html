@@ -55,7 +55,7 @@
 
     </div>
 
-    <div type="hidden" id="principal" th:text="${principal}"></div>
+    <div style="display: none;" id="principal" th:text="${principal}"></div>
 
     <div th:replace="/fragments/footer"></div>
     <script th:src="@{/js/fullcalendar.js}"></script>
@@ -88,7 +88,7 @@
 
             // set event color to orange if the event host is this user
             // else set event color to blue
-            item["color"] = event.hostUserId == userId ? "orange" : "#4682B4";
+            item["color"] = event.hostUserId == userId ? "#4682B4" : "orange" ;
             
             jsonObj.push(item);
         });
