@@ -1,0 +1,26 @@
+<div class="modal-dialog" th:fragment="shareuser">
+  <!-- Modal content-->
+  <div class="modal-content">
+      <div class="modal-header">
+      <h4 class="modal-title">Share calendar with other user</h4>
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+        <form method="POST" th:object="${sharedUser}" th:action="@{calendar/shareduser}">
+
+          <div class="form-group row">
+              <label for="end-input" class="col-sm-3 col-form-label">User id</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="shareToUserId-input" th:field="*{shareToUserId}" placeholder="Share to User Id">
+              </div>
+          </div>
+
+          <input type="hidden" id="host-id-input" th:field="*{hostUserId}">
+
+          <button class="btn btn-success mt-3">Create</button>
+          <button class="btn btn-secondary mt-3" data-dismiss="modal">Close</button>           
+        </form>
+      </div>
+  </div>
+</div>
+

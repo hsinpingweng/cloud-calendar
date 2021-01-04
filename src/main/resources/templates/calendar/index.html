@@ -1,0 +1,163 @@
+<!doctype html>
+
+<head th:replace="/fragments/head :: head"></head>
+
+<body>
+    <nav th:replace="/fragments/nav :: nav"></nav>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-3  mt-5">
+
+                <!-- Check if there any shared users in DB -->
+                <div>
+                    <h2>Shared with <button class="btn btn-success" id="addUserBtn">Add</button></h2>
+                    <table class="table">
+                        <tr>
+                            <th>User</th>
+                            <th>Delete</th>
+                        </tr>
+                        <tr th:each="sharedUser: ${sharedUsers}">
+                            <td th:text="${sharedUser.shareToUserId}"></td>
+                            <td><a th:href="@{'/calendar/delete/shareduser/' + ${sharedUser.id}}" class="confirmDeletion"> Delete </a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <button type="button" class="btn btn-success m-5" id="addEventButton">Create Event</button>
+                </div>
+                <div th:if="${message}" th:text="${message}" th:class="${'alert ' + alertClass}"></div>
+            
+                <div class="row">
+                    <div class="col">
+                        <div id="calendar" th:events="${events}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="eventModal-add" role="dialog">
+            <div id="modal-body" th:replace="/fragments/event :: event-add"></div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="eventModal-edit" role="dialog">
+            <div id="modal-body" th:replace="/fragments/event :: event-edit"></div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="shareUserModal" role="dialog">
+            <div id="modal-body" th:replace="/fragments/shareuser"></div>
+        </div>
+
+    </div>
+
+    <div style="display: none;" id="principal" th:text="${principal}"></div>
+
+    <div th:replace="/fragments/footer"></div>
+    <script th:src="@{/js/fullcalendar.js}"></script>
+    <script th:src="@{/js/moment.js}"></script>
+    
+    <script>
+
+        let userId = $("#principal").text();
+
+        var eventsJson = JSON.parse($('#calendar').attr("events"));
+
+        function fillDigit(num) {
+            return ("00" + num).slice(-2);
+        }
+        
+        
+        jsonObj = [];
+        $.each(eventsJson, function(i, event) {
+            // console.log(event);
+            item = {};
+            item["id"] = event.id;
+            item["hostUserId"] = event.hostUserId;
+            item["title"] = event.title;
+
+            item["start"] = event.start.year
+                            + '-' + fillDigit(event.start.monthValue)
+                            + '-' + fillDigit(event.start.dayOfMonth)
+                            + ' ' + fillDigit(event.start.hour)
+                            + ':' + fillDigit(event.start.minute);
+
+            item["end"] = event.end.year
+            + '-' + fillDigit(event.end.monthValue)
+            + '-' + fillDigit(event.end.dayOfMonth)
+            + ' ' + fillDigit(event.end.hour)
+            + ':' + fillDigit(event.end.minute);
+            item["isBooking"] = event.isBooking;
+
+            // set event color to orange if the event host is this user
+            // else set event color to blue
+            item["color"] = event.hostUserId == userId ? "#4682B4" : "orange" ;
+            
+            jsonObj.push(item);
+            console.log(item["start"]);
+        });
+
+        $(function() {
+            $('#calendar').fullCalendar({
+
+                eventClick: function(info) {
+                    console.log(info);
+                    $("#eventModal-edit #id-input").val(info.id);
+                    $("#eventModal-edit #title-input").val(info.title);
+                    $("#eventModal-edit #start-input").val(moment(info.start).format('yyyy-MM-DD HH:mm'));
+                    $("#eventModal-edit #end-input").val(moment(info.end).format('yyyy-MM-DD HH:mm'));
+                    $("#eventModal-edit #host-id-input").val(info.hostUserId);
+                    $("#eventModal-edit #isbook-input").prop('checked', info.isBooking);
+                    $("#eventModal-edit #host-id").text(info.hostUserId);
+                    
+                    if (info.hostUserId == userId){
+                        $("#saveEventBtn").show();
+                        $("#deleteEventBtn").show();
+                        
+                    } else {
+                        $("#saveEventBtn").hide();
+                        $("#deleteEventBtn").hide();
+                    }
+
+                    $("#eventModal-edit").modal("show");
+                },
+                
+                eventMouseEnter: function(event, el, jsEvent, view){
+                    alert(el);
+                },
+
+                events: jsonObj,
+                eventTextColor: '#FFFFFF',
+                editable: true
+            });
+        });
+        
+        $("#addUserBtn").click(function () {
+            $("#shareUserModal").modal("show");
+            $("#shareUserModal #host-id-input").val(userId);
+        });
+
+        $("#addEventButton").click(function () {
+            $("#eventModal-add").modal("show");
+            $("#eventModal-add #host-id-input").val(userId);
+        });
+
+        $("#deleteEventBtn").click(function(e) {
+            e.preventDefault();
+
+            let id = $("#eventModal-edit #id-input").val();
+            console.log(id);
+            let url = "/calendar/delete/event/" + id;
+            $.get(url, {}, function(data) {})
+                .done(function(){
+                    window.location.href = "/calendar";
+            });
+        });
+    </script>
+</body>
+</html>
+

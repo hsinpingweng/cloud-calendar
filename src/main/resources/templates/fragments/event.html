@@ -1,0 +1,110 @@
+<div class="modal-dialog" th:fragment="event-add">
+  <!-- Modal content-->
+  <div class="modal-content">
+      <div class="modal-header">
+      <h4 class="modal-title">Event</h4>
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+        <form method="POST" th:object="${event}" th:action="@{calendar}">
+
+          <div class="form-group row">
+            <label for="title-input" class="col-sm-3 col-form-label">Title</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="title-input" th:field="*{title}" placeholder="Enter title">
+            </div>
+          </div>
+        
+          <div class="form-group row">
+            <label for="start-input" class="col-sm-3 col-form-label">Start</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="start-input" th:field="*{start}" placeholder="In YYYY-MM-DD HH:MM format">
+            </div>
+          </div>
+        
+          <div class="form-group row">
+            <label for="end-input" class="col-sm-3 col-form-label">End</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="end-input" th:field="*{end}" placeholder="In YYYY-MM-DD HH:MM format">
+            </div>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="isbook-input" th:field="*{isBooking}">
+            <label class="form-check-label" for="isbook-input">
+              Book a slot?
+            </label>
+          </div>
+
+          <input type="hidden" id="host-id-input" th:field="*{hostUserId}">
+          
+          <button class="btn btn-success mt-3">Create</button>
+          <button class="btn btn-secondary mt-3" data-dismiss="modal">Close</button>           
+        </form>
+      </div>
+  </div>
+</div>
+
+
+<div class="modal-dialog" th:fragment="event-edit">
+  <!-- Modal content-->
+  <div class="modal-content">
+      <div class="modal-header">
+      <h4 class="modal-title">Event</h4>
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+      
+      <form method="POST" th:object="${event}" th:action="@{calendar}" th:fragment="event-edit">
+
+        <div class="form-group row">
+          <label for="title-input" class="col-sm-3 col-form-label">Title</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="title-input" th:field="*{title}" placeholder="Enter title">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="start-input" class="col-sm-3 col-form-label">Start</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="start-input" th:field="*{start}" placeholder="In YYYY-MM-DD HH:MM format">
+          </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="end-input" class="col-sm-3 col-form-label">End</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="end-input" th:field="*{end}" placeholder="In YYYY-MM-DD HH:MM format">
+            </div>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="isbook-input" th:field="*{isBooking}">
+          <label class="form-check-label" for="isbook-input">
+            Book a slot?
+          </label>
+        </div>
+
+        <div class="row">
+          <div class="col-3">
+            <b>Host User: </b>
+          </div>
+          <div class="col-9">
+            <p id="host-id" th:text="*{hostUserId}"></p>
+          </div>
+        </div>
+
+        <input type="hidden" id="id-input" th:field="*{id}">
+        <input type="hidden" id="host-id-input" th:field="*{hostUserId}">
+
+        <button class="btn btn-success" id="saveEventBtn">Save</button>
+        <button class="btn btn-danger" id="deleteEventBtn" data-dismiss="modal">Delete</button>
+        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          
+      </form>
+      </div>
+  </div>
+</div>
+
+
+
